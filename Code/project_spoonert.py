@@ -16,6 +16,7 @@ sc = SparkContext(appName=" SI_Project")
 from pyspark.sql import SQLContext
 sqlContext = SQLContext(sc)
 
+import csv
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.classification import LogisticRegressionWithLBFGS
 from pyspark.ml.classification import LogisticRegression
@@ -80,11 +81,12 @@ def get_shot_stats(line):
         fg = line['FG%']
     else:
         fg = line['3P%']
-    return LabeledPoint(shot_outcome, (dist, def_dist, shot_type,fg))
+    return (shot_outcome, (dist, def_dist, shot_type,fg))
 
 q1 = joined.rdd
 q1b = q1.map(get_shot_stats)
-train, test = q1b.randomSplit([0.8, 0.2], seed=12345)
+q1c = q1b.map(lambda x: LabeledPoint(x[0], (x[1][0],x[1][1],x[1][2],x[1][3])))
+train, test = q1c.randomSplit([0.8, 0.2], seed=12345)
 # Run the logistic regression
 logit_model = LogisticRegressionWithLBFGS.train(train)
 # Find the test accuracy
@@ -92,14 +94,22 @@ labels_and_preds = test.map(lambda p: (p.label, logit_model.predict(p.features))
 test_accuracy = labels_and_preds.filter(lambda (v, p): v == p).count() / float(test.count())
 
 ## Run a model to get coeffs
-lr = LogisticRegression(maxIter=10, regParam=0.01,
-                        labelCol='label',
-                        featuresCol='features')
+#lr = LogisticRegression(maxIter=10, regParam=0.01,
+#                        labelCol='label',
+#                        featuresCol='features')
+#
+#outcome_data = q1b.toDF()
+## Fit the model
+#lrModel = lr.fit(outcome_data)
 
-outcome_data = q1b.toDF()
-# Fit the model
-lrModel = lr.fit(outcome_data)
-
+q1b.collect()
+q1b.map(lambda i: ','.join(str(j) for j in i))
+with open('output_shots.csv', 'wb') as csvfile:
+    f = csv.writer(csvfile, delimiter=',',
+                            quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    f.writerow(["SHOT_OUTCOME", "FEATURES"])
+    for row in q1b.collect():
+        f.writerow(row)
 #######################
 # Task 2: Do players get better with experience?
 #######################
@@ -136,26 +146,26 @@ lrModel = lin_reg.fit(lr_data)
 print("Coefficients: " + str(lrModel.coefficients)) # 0.0299
 print("Intercept: " + str(lrModel.intercept)) # 19.43
 
-# Get predictions
-valuesAndPreds = lr_data.map(lambda p: float(lrModel.predict(p.features)))#, p.label))
+## Get predictions
+#valuesAndPreds = lr_data.map(lambda p: float(lrModel.predict(p.features)))#, p.label))
+#
+## Instantiate metrics object
+#metrics = RegressionMetrics(valuesAndPreds)
+#
+## Squared Error
+#print("MSE = %s" % metrics.meanSquaredError)
+#print("RMSE = %s" % metrics.rootMeanSquaredError)
+#
+## R-squared
+#print("R-squared = %s" % metrics.r2)
 
-# Instantiate metrics object
-metrics = RegressionMetrics(valuesAndPreds)
-
-# Squared Error
-print("MSE = %s" % metrics.meanSquaredError)
-print("RMSE = %s" % metrics.rootMeanSquaredError)
-
-# R-squared
-print("R-squared = %s" % metrics.r2)
-
-
+lr_data.collect()
 lr_data.rdd.map(lambda i: ','.join(str(j) for j in i))
-with open('experience.csv', 'wb') as csvfile:
+with open('output_experience.csv', 'wb') as csvfile:
     team_props = csv.writer(csvfile, delimiter=',',
                             quotechar='"', quoting=csv.QUOTE_MINIMAL)
     team_props.writerow(["EXPERIENCE", "POINTS"])
-    for row in tmp.collect():
+    for row in lr_data.collect():
         team_props.writerow(row)
 
 ########################
@@ -217,8 +227,22 @@ def get_player_stats(line):
     return (int(clust), (height, weight, age, 1))
 
 q3d = q3c.map(get_player_stats).filter(lambda x: x[1][0] is not None)
+# Get totals for each cluster.
 q3e = q3d.reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1], x[2]+y[2], x[3]+y[3]))
+# Averages for each cluster.
 q3f = q3e.mapValues(lambda x: (float(x[0])/x[3], float(x[1])/x[3], float(x[2])/x[3]))
+# Get data in format to write to csv.
+q3g = q3f.map(lambda x: (x[0], x[1][0], x[1][1],x[1][2]))
+q3g.collect()
+q3g.map(lambda i: ','.join(str(j) for j in i))
+
+# Save to csv file
+with open('output_personal_info.csv', 'wb') as csvfile:
+    f = csv.writer(csvfile, delimiter=',',
+                            quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    f.writerow(["Cluster", "Height", "Weight", "Age"])
+    for row in q3g.collect():
+        f.writerow(row)
 
 ######################
 # Task 4: Look at proportion of shot types per offensive rating
@@ -235,7 +259,7 @@ props = sqlContext.sql("""select t1.OFF_BINS, t1.SHOT_BUCKET, t1.cnt / t2.tot_cn
 
 props.collect()
 props.rdd.map(lambda i: ','.join(str(j) for j in i))
-with open('team_props.csv', 'wb') as csvfile:
+with open('output_team_props.csv', 'wb') as csvfile:
     team_props = csv.writer(csvfile, delimiter=',',
                             quotechar='"', quoting=csv.QUOTE_MINIMAL)
     team_props.writerow(["OFF_RAT", "SHOT_TYPE", "Prop"])
