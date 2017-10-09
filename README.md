@@ -11,3 +11,4 @@ Using information like the distance the defender is from the basket, the distanc
 Randomly splitting our data into a training (80% of our data) and a test set (20%), we predict how well our logisitic regression model classifies if a shot is made or missed. Unfortunately, the classification accuracy is a low 0.55, showing that it is very difficult to predict if a shot is going to go on in or not as there are many other factors that go into the shot. Additionally, while shots closer to the basket are generally thought of as easier shots, your defender is also much closer to you which causes a different relationship than when you are at the 3 point line and your defender is the same distance away. Looking at the plot below we start to see the complexity of  predicting the shot's outcome as many made and missed shots are all clustered in the same area.
 
 ![](/Data/Output/Plots/shot_outcome.png?raw=true "Shot Outcome based on Defender Distance and Distance to Basket")
+
