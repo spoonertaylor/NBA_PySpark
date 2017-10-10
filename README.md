@@ -35,6 +35,6 @@ Does it take a rookie a couple years to adapt to the next level? Do older player
 
 ![](/Data/Output/Plots/experience.png?raw=true "Points per 48 Minutes by Experience")
 
-Through this basic analysis our hypothesized thoughts seem to be seen. Scoring seems to increase through the first 3 years in the leagure where it reaches its height between 3 and 6 years of experience. After about 8 years of experience we start to see a small decline in scoring as players start to get older. 
+Through this basic analysis our hypothesized thoughts seem to be seen. Scoring seems to increase through the first 3 years in the leagure where it reaches its height between 3 and 6 years of experience. After about 8 years of experience we a decline in scoring for the rest of the years with the 9 years of experience showing the third lowest points per 48 minutes. There is a spike at 13 years experience but due to the small sample size we are weary about the results.
 
 The leaders during the 2013-2014 season were Kevin Durant, LeBron James, Kevin Love and Russell Westbrook who were in their 7th, 11th, 6th and 6th year of experience respectively and were all above 34 points per 48. We point this out because for such small sample sizes, like we have, taking the average within groups can lead to skewed results. This leads to the spike in points per 48 at 8 years of experience. This spike was lead by LaMarcus Aldridge's impressive 30.8 points per 48 and Rudy Gay's 27.6 points per 48.
