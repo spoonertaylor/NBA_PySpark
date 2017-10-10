@@ -12,3 +12,29 @@ Randomly splitting our data into a training (80% of our data) and a test set (20
 
 ![](/Data/Output/Plots/shot_outcome.png?raw=true "Shot Outcome based on Defender Distance and Distance to Basket")
 
+## Does scoring get better with experience?
+Does it take a rookie a couple years to adapt to the next level? Do older players start to adapt their game by passing more? In our next analysis we looked at the relationship between player's scoring per 48 minutes and how many years they have been in the league. We took all players who played more than 250 minutes in the 2013-2014 season and grouped them by their experience level. In the table and graph below we see the results:
+
+| Experience | n  | Points per 48 min |
+|-----------:|:--:|:-----------------:|
+| Rookies    |14  | 15.30             |
+|1           |26  | 17.81             |
+|2           |23  | 19.59             |
+|3           |23  | 21.42             |
+|4           |22  | 20.41             |
+|5           |25  | 21.14             |
+|6           |18  | 20.68             |
+|7           |16  | 19.47             |
+|8           |7   | 23.24             |
+|9           |12  | 18.09             |
+|10          |11  | 18.36             |
+|11          |16  | 19.63             |
+|12          |4   | 18.30             |
+|13          |6   | 21.07             |
+|14+         |9   | 18.96             |
+
+![](/Data/Output/Plots/experience.png?raw=true "Points per 48 Minutes by Experience")
+
+Through this basic analysis our hypothesized thoughts seem to be seen. Scoring seems to increase through the first 3 years in the leagure where it reaches its height between 3 and 6 years of experience. After about 8 years of experience we start to see a small decline in scoring as players start to get older. 
+
+The leaders during the 2013-2014 season were Kevin Durant, LeBron James, Kevin Love and Russell Westbrook who were in their 7th, 11th, 6th and 6th year of experience respectively and were all above 34 points per 48. We point this out because for such small sample sizes, like we have, taking the average within groups can lead to skewed results. This leads to the spike in points per 48 at 8 years of experience. This spike was lead by LaMarcus Aldridge's impressive 30.8 points per 48 and Rudy Gay's 27.6 points per 48.
