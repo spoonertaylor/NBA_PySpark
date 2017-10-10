@@ -81,10 +81,16 @@ def get_shot_stats(line):
         fg = line['FG%']
     else:
         fg = line['3P%']
+    if shot_outcome:
+        shot_outcome = 1
+    else:
+        shot_outcome = 0
     return (shot_outcome, (dist, def_dist, shot_type,fg))
 
 q1 = joined.rdd
-q1b = q1.map(get_shot_stats)
+q1b = q1.map(get_shot_stats).filter(lambda x: x[0] is not None and
+            x[1][0] is not None and x[1][1] is not None and
+             x[1][2] is not None and x[1][2] is not None)
 q1c = q1b.map(lambda x: LabeledPoint(x[0], (x[1][0],x[1][1],x[1][2],x[1][3])))
 train, test = q1c.randomSplit([0.8, 0.2], seed=12345)
 # Run the logistic regression
@@ -92,15 +98,6 @@ logit_model = LogisticRegressionWithLBFGS.train(train)
 # Find the test accuracy
 labels_and_preds = test.map(lambda p: (p.label, logit_model.predict(p.features)))
 test_accuracy = labels_and_preds.filter(lambda (v, p): v == p).count() / float(test.count())
-
-## Run a model to get coeffs
-#lr = LogisticRegression(maxIter=10, regParam=0.01,
-#                        labelCol='label',
-#                        featuresCol='features')
-#
-#outcome_data = q1b.toDF()
-## Fit the model
-#lrModel = lr.fit(outcome_data)
 
 q1b.collect()
 q1b.map(lambda i: ','.join(str(j) for j in i))
@@ -126,6 +123,14 @@ def get_player_scoring(line):
     minutes = line['MIN']
     return ((int(player_id), int(exp)), (pts, minutes))
 
+
+# Group older: 
+def group_olders(line):
+    exp = line[0]
+    if exp >= 14:
+        exp = "14+"
+    return (exp, (line[1][0], line[1][1]))
+
 q2 = joined.rdd
 # Get scoring per 48 minutes
 q2b = q2.map(get_player_scoring).filter(lambda x: x[1][1] >= 250).filter(lambda x: x[1][0] >= 0).filter(lambda x: x[0][1] >= 0)
@@ -133,7 +138,8 @@ q2b = q2.map(get_player_scoring).filter(lambda x: x[1][1] >= 250).filter(lambda 
 q2c = q2b.mapValues(lambda x: float(x[0])/x[1]*48).mapValues(lambda x: (x, 1)).reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1]))
 q2d = q2c.mapValues(lambda x: float(x[0])/x[1])
 q2e = q2d.map(lambda x: (x[0][1], (x[1],1))).reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1]))
-q2f = q2e.mapValues(lambda x: float(x[0])/x[1])
+q2f = q2e.map(group_olders).reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1]))
+q2g = q2f.mapValues(lambda x: float(x[0])/x[1])
 
 lin_reg = LinearRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8,
                            featuresCol = 'features', labelCol = 'label')
@@ -159,13 +165,13 @@ print("Intercept: " + str(lrModel.intercept)) # 19.43
 ## R-squared
 #print("R-squared = %s" % metrics.r2)
 
-lr_data.collect()
-lr_data.rdd.map(lambda i: ','.join(str(j) for j in i))
-with open('output_experience.csv', 'wb') as csvfile:
+q2g.collect()
+q2g.map(lambda i: ','.join(str(j) for j in i))
+with open('output_experience2.csv', 'wb') as csvfile:
     team_props = csv.writer(csvfile, delimiter=',',
                             quotechar='"', quoting=csv.QUOTE_MINIMAL)
     team_props.writerow(["EXPERIENCE", "POINTS"])
-    for row in lr_data.collect():
+    for row in q2g.collect():
         team_props.writerow(row)
 
 ########################
