@@ -57,6 +57,8 @@ teams2 = sqlContext.sql("""select *,
 from teams_1""")
 teams2.registerTempTable("teams")
 
+year_8 = sqlContext.sql("""select * from teams where Experience == 8""")
+
 ######################
 # Join tables
 ######################
@@ -72,26 +74,28 @@ joined.registerTempTable("nba")
 # shot outcome ~ distance + def_dis + touch_time + dribbles + FG% of player
 ######################
 def get_shot_stats(line):
-    shot_outcome = bool(line['FGM'])
+    shot_outcome = line['FGM']
     dist = line['SHOT_DIST']
     def_dist = line['CLOSE_DEF_DIST']
     shot_type = int(line['SHOT_TYPE'])
     pts = line[18]
     if pts == 3:
-        fg = line['FG%']
-    else:
         fg = line['3P%']
-    if shot_outcome:
-        shot_outcome = 1
     else:
-        shot_outcome = 0
-    return (shot_outcome, (dist, def_dist, shot_type,fg))
+        fg = line['FG%']
+    if fg is not None:
+        fg = fg / 100
+    if shot_outcome:
+        shot = 1
+    else:
+        shot = 0
+    return (shot, (dist, def_dist, shot_type,fg))
 
 q1 = joined.rdd
 q1b = q1.map(get_shot_stats).filter(lambda x: x[0] is not None and
             x[1][0] is not None and x[1][1] is not None and
-             x[1][2] is not None and x[1][2] is not None)
-q1c = q1b.map(lambda x: LabeledPoint(x[0], (x[1][0],x[1][1],x[1][2],x[1][3])))
+             x[1][2] is not None and x[1][3] is not None)
+q1c = q1b.map(lambda x: LabeledPoint(x[0], (x[1][0], x[1][1],x[1][2],x[1][3])))
 train, test = q1c.randomSplit([0.8, 0.2], seed=12345)
 # Run the logistic regression
 logit_model = LogisticRegressionWithLBFGS.train(train)
@@ -133,8 +137,9 @@ def group_olders(line):
 
 q2 = joined.rdd
 # Get scoring per 48 minutes
-q2b = q2.map(get_player_scoring).filter(lambda x: x[1][1] >= 250).filter(lambda x: x[1][0] >= 0).filter(lambda x: x[0][1] >= 0)
+q2b = q2.map(get_player_scoring).filter(lambda x: x[1][1] >= 250).filter(lambda x: x[0][1] >= 0)
 # Reduce by experience
+
 q2c = q2b.mapValues(lambda x: float(x[0])/x[1]*48).mapValues(lambda x: (x, 1)).reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1]))
 q2d = q2c.mapValues(lambda x: float(x[0])/x[1])
 q2e = q2d.map(lambda x: (x[0][1], (x[1],1))).reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1]))
@@ -144,7 +149,7 @@ q2g = q2f.mapValues(lambda x: float(x[0])/x[1])
 lin_reg = LinearRegression(maxIter=10, regParam=0.3, elasticNetParam=0.8,
                            featuresCol = 'features', labelCol = 'label')
 
-lr_data = q2d.map(lambda x: (x[0][1], x[1])).map(lambda x: LabeledPoint(x[1], [x[0]])).toDF()
+lr_data = q2d.map(lambda x: (x[0][1], x[1])).map(lambda x: LabeledPoint(x[1], [x[0], x[0]*x[0]])).toDF()
 
 lrModel = lin_reg.fit(lr_data)
 
