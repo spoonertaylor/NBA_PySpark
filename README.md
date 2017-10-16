@@ -14,12 +14,16 @@ Randomly splitting our data into a training (80% of our data) and a test set (20
 
 Despite our complexities, our model does back up intuitive thinking. In the table below we see the coefficients from the logistic regression that we fit. As one would expect, as you get farther away from the basket (increase your shot distance), the odds that your shot goes in goes down. Additionally, as the defender gets farther away (increasing the defender distance), the odds your shot goes in increases. Nothing ground breaking yet, but it is interesting to see that the coefficient for defender distance is larger in absolute value, showing that your odds of making a shot increases more by moving your defender one foot farther away than you as a shooter moving in one foot, keeping all other factors constant. The Shot tYpe factor is an indicator of whether the shot was a catch and shoot or off the dribble. It is agreed that shooting off the dribble is much hard (just try it yourself) and thus it makes sense that the odds of a shot going in decreases as you go from a catch and shoot to off the dribble. 
 
+<center>
+ 
 | Variable          | Coefficient |
 |------------------:|:-----------:|
 | Shot Distance     | -0.0553     |
 | Defender Distance | 0.1056      |
 | Shot Type         | -0.1369     |
 | FG%               | 0.0034      |
+
+</center>
 
 ## Does scoring get better with experience?
 Does it take a rookie a couple years to adapt to the next level? Do older players start to adapt their game by passing more? In our next analysis we looked at the relationship between player's scoring per 48 minutes and how many years they have been in the league. We took all players who played more than 250 minutes in the 2013-2014 season and grouped them by their experience level. In the table and graph below we see the results:
