@@ -77,14 +77,12 @@ def get_shot_stats(line):
     shot_outcome = line['FGM']
     dist = line['SHOT_DIST']
     def_dist = line['CLOSE_DEF_DIST']
-    shot_type = int(line['SHOT_TYPE'])
+    shot_type = bool(line['SHOT_TYPE'])
     pts = line[18]
     if pts == 3:
         fg = line['3P%']
     else:
         fg = line['FG%']
-    if fg is not None:
-        fg = fg / 100
     if shot_outcome:
         shot = 1
     else:
