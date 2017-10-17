@@ -51,3 +51,20 @@ Does it take a rookie a couple years to adapt to the next level? Do older player
 Through this basic analysis our hypothesized thoughts seem to be seen. Scoring seems to increase through the first 3 years in the leagure where it reaches its height between 3 and 6 years of experience. After about 8 years of experience we a decline in scoring for the rest of the years with the 9 years of experience showing the third lowest points per 48 minutes. There is a spike at 13 years experience but due to the small sample size we are weary about the results.
 
 The leaders during the 2013-2014 season were Kevin Durant, LeBron James, Kevin Love and Russell Westbrook who were in their 7th, 11th, 6th and 6th year of experience respectively and were all above 34 points per 48. We point this out because for such small sample sizes, like we have, taking the average within groups can lead to skewed results. This leads to the spike in points per 48 at 8 years of experience. This spike was lead by LaMarcus Aldridge's impressive 30.8 points per 48 and Rudy Gay's 27.6 points per 48.
+
+## What are the physical qualities of NBA "positions"?
+It is pretty agreed upon at this point in NBA circles that the 5 original positions that used to define player's positions no longer captures the true positions in the NBA today. With stretch 4's, 3 & D wings, scoring point guards vs traditional pass first point guards, we can no longer pigeonhole players into just a point guard, shooting guard, small forward, power forward and center. As we start to look at clustering players by their qualities a question I have is: What are the physical qualities (height, weight and age) of these new and improved clusters.
+
+The first step was to first define our new "positions", which was done by using k-means clustering to fit players into XXXXXXX groups. Since we only have data (for this analysis) from the 2014-2015 season and since we do not have number of possessions, we will use statistics per 48 minutes. Using season totals can be problematic because it would just lead to cluster people based on how often they play. We ended up deciding on clustering by the following statistics:
+* Points per 48
+* Field Goal Attempts per 48
+* FGP%
+* 3 Point Attempts per 48
+* 3P%
+* Free Throw Attempts per 48
+* FT%
+* Offensive Rebounds per 48
+* Deffensive Rebounds per 48
+* Asists per 48
+* Steals per 48
+* Turnoversr per 48
