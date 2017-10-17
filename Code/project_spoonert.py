@@ -185,6 +185,7 @@ q3 = players.rdd
 
 def get_player_stats(line):
     mins = line['MIN']
+    pts = line['PTS']
     fga = line['FGA']
     fgp = line['FG%']
     thr_a = line['3PA']
@@ -198,32 +199,50 @@ def get_player_stats(line):
     blk = line['BLK']
     tov = line['TOV']
     
-    return (mins,fga,fgp,thr_a,thr_p,fta,ftp,oreb,dreb,ast,stl,blk,tov)
+    return (mins,pts, fga,fgp,thr_a,thr_p,fta,ftp,oreb,dreb,ast,stl,blk,tov)
 
-q3a = q3.map(get_player_stats).filter(lambda x: x[0] is not None).filter(lambda x: x[0] >= 250)
+q3a = q3.map(get_player_stats).filter(lambda x: x[0] is not None \
+            and x[1] is not None and x[2] is not None and x[3] is not None \
+                 and x[4] is not None and x[5] is not None and x[6] is not None \
+                      and x[7] is not None and x[8] is not None and x[9] is not None \
+                           and x[10] is not None and x[11] is not None and x[12] is not None\
+                                and x[13] is not None)\
+            .filter(lambda x: x[0] >= 1000)
 q3a_2 = q3a.map(lambda x: (float(x[1])/x[0]*48, x[2], float(x[3])/x[0]*48,
                                  x[4], float(x[5])/x[0]*48, float(x[6])/x[0]*48,
                                   float(x[7])/x[0]*48, float(x[8])/x[0]*48,
                                        float(x[9])/x[0]*48, float(x[10])/x[0]*48,
-                                            float(x[11])/x[0]*48, float(x[12])/x[0]*48))
+                                            float(x[11])/x[0]*48, float(x[12])/x[0]*48, 
+                                                 float(x[13])/x[0]*48))
 
 # Build the model (cluster the data)
-clusters = KMeans.train(q3a_2, 6, maxIterations=10,
-        runs=10, initializationMode="random")
+clusters = KMeans.train(q3a_2, 8, maxIterations=50,
+        runs=50, initializationMode="random")
 
 # Here are all the clusters
 q3b = q3a_2.map(lambda point: clusters.predict(point))
 # Add this to players
 
-q3c = q3.filter(lambda x: x['MIN'] is not None).filter(lambda x: x['MIN'] >= 250).zip(q3b)
+q3c = q3.filter(lambda x: x['MIN'] is not None).filter(lambda x: x['MIN'] >= 1000).zip(q3b)
 
 # It will be interesting to see who is in each cluster
-cluster_0 = q3c.filter(lambda x: x[1] == 0).map(lambda x: x[0][0]) #BIGS
-cluster_1 = q3c.filter(lambda x: x[1] == 1).map(lambda x: x[0][0]) # SHOOTERS
-cluster_2 = q3c.filter(lambda x: x[1] == 2).map(lambda x: x[0][0]) # 3 and D
-cluster_3 = q3c.filter(lambda x: x[1] == 3).map(lambda x: x[0][0]) # CODY ZELLER
-cluster_4 = q3c.filter(lambda x: x[1] == 4).map(lambda x: x[0][0]) # ??? chris bosh, cp3, dame, demar
-cluster_5 = q3c.filter(lambda x: x[1] == 5).map(lambda x: x[0][0]) # non scoring bigs
+cluster_0 = q3c.filter(lambda x: x[1] == 0).map(lambda x: x[0][0]) 
+cluster_1 = q3c.filter(lambda x: x[1] == 1).map(lambda x: x[0][0])
+cluster_2 = q3c.filter(lambda x: x[1] == 2).map(lambda x: x[0][0])
+cluster_3 = q3c.filter(lambda x: x[1] == 3).map(lambda x: x[0][0])
+cluster_4 = q3c.filter(lambda x: x[1] == 4).map(lambda x: x[0][0])
+cluster_5 = q3c.filter(lambda x: x[1] == 5).map(lambda x: x[0][0]) 
+cluster_6 = q3c.filter(lambda x: x[1] == 6).map(lambda x: x[0][0]) 
+cluster_7 = q3c.filter(lambda x: x[1] == 7).map(lambda x: x[0][0]) 
+
+cluster_0.take(20)
+cluster_1.take(20)
+cluster_2.take(20)
+cluster_3.take(20)
+cluster_4.take(20)
+cluster_5.take(20)
+cluster_6.take(20)
+cluster_7.take(20)
 
 
 # Now get average person data
@@ -252,6 +271,20 @@ with open('output_personal_info.csv', 'wb') as csvfile:
     f.writerow(["Cluster", "Height", "Weight", "Age"])
     for row in q3g.collect():
         f.writerow(row)
+
+
+phys_attr = sqlContext.sql("""select max(Height) as Max_Height, min(Height) as Min_Height, avg(Height) as Avg_Height,
+	max(Weight) as Max_Weight, min(Weight) as Min_Weight, avg(Weight) as Avg_Weight,
+	max(Age) as Max_Age, min(Age) as Min_Age, avg(Age) as Avg_Age
+	from nba""")
+
+###################################
+# New task: Ideal lineup based on clusters
+###################################
+
+## Take the 5 players with the most minutes per team. 
+## Count the cluster groups per team.
+## Sort by wins.
 
 ######################
 # Task 4: Look at proportion of shot types per offensive rating

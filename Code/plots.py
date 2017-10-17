@@ -44,26 +44,15 @@ exp_plt = ggplot(aes(x = 'Experience', y = 'POINTS'), data=exp) + geom_point() +
 ############
 
 types = pd.read_csv(path+'output_personal_info.csv')
+types = types.sort_values('Cluster')
+index = ['Defensive Wings', '3 and D Wings', 'Role Players', '3 Point Wings', 'Scoring Guards',\
+         'Score First Mindset', 'Interesting Mix', 'Defensive Bigs']
+types['Index'] = index
+types_long = pd.melt(types, id_vars = ['Cluster', 'Index'], value_vars = ['Height', 'Weight', 'Age'])
 
-types_long = pd.melt(types, id_vars = ['Cluster'], value_vars = ['Height', 'Weight', 'Age'])
-
-types_plt = ggplot(aes(x='Cluster', y = 'Age'), data=types) + geom_bar(stat="identity") + facet_wrap("variable") 
- 
-plt.figure(1)
-
-age = types[['Age']].plot(kind = "bar", title = "Age", legend=False)
-age.set_ylabel('Age')
-age.set_xlabel('Cluster')
-
-height = types[['Height']].plot(kind = "bar", title = "Height", legend=False)
-height.set_ylabel('Height (cm)')
-height.set_xlabel('Cluster')
-
-weight = types[['Weight']].plot(kind = "bar", title = "Weight", legend=False)
-weight.set_ylabel('Weight (kg)')
-weight.set_xlabel('Cluster')
-
-
+types_plt = ggplot(aes(x='Cluster', weight = 'value'), types_long) + geom_bar() + \
+                  facet_wrap("variable", scales = "free")
+                  
 ############
 # Task 4: Offensive Rating and Proportions
 ###########
