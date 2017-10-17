@@ -75,13 +75,29 @@ Below we see how our clusters split up. It was pretty difficult to identify the 
 
 | Cluster Name        | Num. Players | Example of players                             |
 |--------------------:|:------------:|:----------------------------------------------:|
-| Scoring Guards      | 10           | LeBron James, Russell Westbrook, Stephen Curry |
-| Score first/3 Point Wings | 32     | Chandler Parsons, Danny Green, Kyle Korver     |
+| Defensive Wings   | 58   | Andre Iguodala, Iman Shumpert, Patrick Patterson |
 | 3 and D Wings       | 32           | Trevor Ariza, Avery Bradly, Gordon Hayward     |
-| D first Wings/Stretch Posts | 58   | Andre Iguodala, Iman Shumpert, Patrick Patterson |
-| Score First         | 21           | Dwyane Wade, DeMarcus Cousins, DeMar DeRozan   |
-| Defensive Bigs      | 43           | DeAndre Jordan, Tristan Thompson, Tyson Chandler |
 | Role Players        | 45           | Al-Farouq Aminu, Otto Porter Jr., Matthew Dellavedova |
+| 3 Point Wings | 32     | Chandler Parsons, Danny Green, Kyle Korver     |
+| Score First Mindset         | 21           | Dwyane Wade, DeMarcus Cousins, DeMar DeRozan   |
 |  Interesting Mix of Players  | 33  | Carmelo Anthony, Serge Ibaka, Tim Duncan, Tony Parker |
+| All Star Guards      | 10           | LeBron James, Russell Westbrook, Stephen Curry |
+| Defensive Bigs      | 43           | DeAndre Jordan, Tristan Thompson, Tyson Chandler |
 
-The purpose of this analysis is to see how the physical attributes of these players compare. We will look at how the average age, height and weight compare for the clusters in both tables and figures.
+The purpose of this analysis is to see how the physical attributes of these players compare. We will look at how the average age, height and weight to compare the clusters. Below we see a table and graphs of the NBA average for each attribute as well the attributes split up by each cluster. The cluster number is shown for plotting purposes.
+
+What we can see is that there is not much noticable discrepancies between groups. For the clusters taht are composed of an "interesting mix of players", the score first mindset players and role players there is a large variety in players within the clusters. Because of this, looking at the physical averages within these groups will not be much help. We can, however, see some interesting insights within the age of these groups. Role Players and the big mix of players both had ages above the average age of the NBA while the score first players were the youngest cluster. Pairing the scoring the analysis that we did in the previous section with these results, we can start to infer that while younger players, who may have more energy/more athletic, are more focused on scoring. On the other side, older players start to have to find smaller roles that can come in many different forms to help out their team. Other insights we can see is that 3 point shooting is no longer for short players. Both 3 and D Wings and 3 Point focused wings are at or above the league average in height. We are starting to see bigger wings and "strech 4's" shoot more three's. It was this movement that lead people start to think that the original 5 positions needed more insight and our analysis backs up these earlier thoughts. 
+
+| Cluster (Cluster #)      |    Average Age (Years)     | Average Height (Ft' In")     | Average Weight (lbs)   |
+|------------------:|:--------------------------:|:----------------------------:|:----------------------:|
+| Entire NBA        | 27.9                       |  6' 5"                       |    221                 |
+| Defensive Wings (0)  | 28.4                       |  6' 4"                       |    208                 |
+| 3 and D Wings (1)     | 27.3                       |  6' 7"                       |    207                 |
+| Role Players (2)      |  28.3                      |  6' 7"                       |    225                 |
+| 3 Point Wings (3)     | 28.3                       |  6' 5"                       |    210                 |
+| Score First Mindset (4) | 26.8                     |  6' 8"                       |    248                 |
+| Interesting Mix of Players (5) | 28.0              |  6' 6"                       |    227                 |
+| All Star Guards (6)   | 27.4                      |  6' 3"                       |    206                 |
+| Defensive Bigs (7)   |  27.9                      |  6' 9"                       |    236                 |
+
+![](/Data/Output/Plots/physical_attr.png?raw=true "Physical Attributes")
