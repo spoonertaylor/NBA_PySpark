@@ -53,7 +53,7 @@ Through this basic analysis our hypothesized thoughts seem to be seen. Scoring s
 The leaders during the 2013-2014 season were Kevin Durant, LeBron James, Kevin Love and Russell Westbrook who were in their 7th, 11th, 6th and 6th year of experience respectively and were all above 34 points per 48. We point this out because for such small sample sizes, like we have, taking the average within groups can lead to skewed results. This leads to the spike in points per 48 at 8 years of experience. This spike was lead by LaMarcus Aldridge's impressive 30.8 points per 48 and Rudy Gay's 27.6 points per 48.
 
 ## What are the physical qualities of NBA "positions"?
-It is pretty agreed upon at this point in NBA circles that the 5 original positions that used to define player's positions no longer captures the true positions in the NBA today. With stretch 4's, 3 & D wings, scoring point guards vs traditional pass first point guards, we can no longer pigeonhole players into just a point guard, shooting guard, small forward, power forward and center. As we start to look at clustering players by their qualities a question I have is: What are the physical qualities (height, weight and age) of these new and improved clusters.
+It is pretty agreed upon at this point in NBA circles that the 5 original positions that used to define player's positions no longer captures the true positions in the NBA today. With stretch 4's, 3 & D wings, scoring point guards vs traditional pass first point guards, we can no longer pigeonhole players into just a point guard, shooting guard, small forward, power forward and center. As we start to look at clustering players by their qualities a question I have is: What are the physical qualities (height, weight and age) of these new and improved clusters. The motivation behind this analysis came from the general positions. Point guards are smaller and the centers are bigger. Now that we focus more on the individual skills, instead of general buckets, it will be interesting to see how the idea behind player positions change.
 
 The first step was to first define our new "positions", which was done by using k-means clustering to fit players into 8 groups. Since we only have data (for this analysis) from the 2014-2015 season and since we do not have number of possessions, we will use statistics per 48 minutes. Using season totals can be problematic because it would just lead to cluster people based on how often they play. We ended up deciding on clustering by the following statistics:
 * Points per 48
@@ -71,7 +71,7 @@ The first step was to first define our new "positions", which was done by using 
 
 We then filtered out any players that did not play at least 1000 minutes. This was an arbitrary cutoff but felt like enough time for a player to get find an actual role in the game which leaves us with a total of 274 players.
 
-Below we see how our clusters split up. 
+Below we see how our clusters split up. It was pretty difficult to identify the different clusters, not giving us too much confidence in using per 48 minute stats. Saying that, we did see some seperatation and have more confidence in the clusters found than using the general 5 position lineupes.
 
 | Cluster Name        | Num. Players | Example of players                             |
 |--------------------:|:------------:|:----------------------------------------------:|
@@ -80,6 +80,8 @@ Below we see how our clusters split up.
 | 3 and D Wings       | 32           | Trevor Ariza, Avery Bradly, Gordon Hayward     |
 | D first Wings/Stretch Posts | 58   | Andre Iguodala, Iman Shumpert, Patrick Patterson |
 | Score First         | 21           | Dwyane Wade, DeMarcus Cousins, DeMar DeRozan   |
-| Not sure            | 33           | Kobe Bryant, Carmelo Anthony, Chris Bosh, Tim Duncan, Tony Parker |
 | Defensive Bigs      | 43           | DeAndre Jordan, Tristan Thompson, Tyson Chandler |
 | Role Players        | 45           | Al-Farouq Aminu, Otto Porter Jr., Matthew Dellavedova |
+|  Interesting Mix of Players  | 33  | Carmelo Anthony, Serge Ibaka, Tim Duncan, Tony Parker |
+
+The purpose of this analysis is to see how the physical attributes of these players compare. We will look at how the average age, height and weight compare for the clusters in both tables and figures.
