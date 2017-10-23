@@ -1,13 +1,3 @@
----
-title: "SI 618 Fall 2017 Project"
-subtitle: "Using PySpark to Explore the 2014-2015 NBA Season"
-author: "Taylor Spooner"
-output: pdf_document
----
-```{r,echo=FALSE}
-setwd("C:/Users/Taylor/Documents/UMich/SI_618/Project/")
-```
-
 # Motivation
 
 The use of distributed computing platforms, like Spark, are becoming more and more valuable in data analysis. To practice using Spark I decided to use it's power to analyze data that I am passionate about: the NBA. The growing popularity of analytics in basketball is evolving the game as we know it, thus making it ideal data to use for this project. Furthermore, the true insights that can be gained in the NBA are still in their infancy as the type of data available for NBA teams continues to grow and get better. 
