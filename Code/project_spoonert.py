@@ -38,7 +38,10 @@ teams.registerTempTable("teams_1")
 # Data manipulation
 #################
 # Bin the shots and save to a new dataframe
-shots2 = sqlContext.sql("""select *, 
+shots2 = sqlContext.sql("""select LOCATION, PERIOD, GAME_CLOCK, SHOT_CLOCK,
+DRIBBLES, TOUCH_TIME, SHOT_DIST, PTS_TYPE, SHOT_RESULT, CLOSEST_DEFENDER, 
+CLOSEST_DEFENDER_PLAYER_ID, CLOSE_DEF_DIST, FGM as MADE, PTS as PTS_SHOT,
+player_name, player_id,  
 	case when PTS_TYPE = 3 then "Three"
 	when PTS_TYPE = 2 and SHOT_DIST <= 8 then "Paint"
 	else "Mid_Range" end as SHOT_BUCKET,
@@ -48,16 +51,17 @@ from shots_1""")
 shots2.registerTempTable("shots")
 
 # Bin the offensive ratings.
-teams2 = sqlContext.sql("""select *,
+teams2 = sqlContext.sql("""select TEAM, GP, W, L, OFFRTG, DEFRTG,
+                        NETRTG,ASTPer, AST_TO, AST_RAT, OREBPer,
+                        DREBPer, REBPer, TOVPer, EFGPer, TSPer,
+                        PACE, PIE, TEAM_ABBV,
 	case when OFFRTG < 96 then "[93, 96)"
 	when OFFRTG < 99 then "[96, 99)"
 	when OFFRTG < 102 then "[99, 102)"
-	when OFFRTG < 105 then "[105, 108)"
-	else "[108, 111)" end as OFF_BINS
+	when OFFRTG < 105 then "[102, 105)"
+	else "[105, 111)" end as OFF_BINS
 from teams_1""")
 teams2.registerTempTable("teams")
-
-year_8 = sqlContext.sql("""select * from teams where Experience == 8""")
 
 ######################
 # Join tables
@@ -273,18 +277,10 @@ with open('output_personal_info.csv', 'wb') as csvfile:
         f.writerow(row)
 
 
-phys_attr = sqlContext.sql("""select max(Height) as Max_Height, min(Height) as Min_Height, avg(Height) as Avg_Height,
-	max(Weight) as Max_Weight, min(Weight) as Min_Weight, avg(Weight) as Avg_Weight,
-	max(Age) as Max_Age, min(Age) as Min_Age, avg(Age) as Avg_Age
+phys_attr = sqlContext.sql("""select max(Height) as Max_Height, min(Height) as Min_Height, avg(Height) as Avg_Height, stddev(Height) as sd_Height,
+	max(Weight) as Max_Weight, min(Weight) as Min_Weight, avg(Weight) as Avg_Weight, stddev(Weight) as sd_Weight,
+	max(Age) as Max_Age, min(Age) as Min_Age, avg(Age) as Avg_Age, stddev(Age) as sd_Age
 	from nba""")
-
-###################################
-# New task: Ideal lineup based on clusters
-###################################
-
-## Take the 5 players with the most minutes per team. 
-## Count the cluster groups per team.
-## Sort by wins.
 
 ######################
 # Task 4: Look at proportion of shot types per offensive rating
@@ -298,6 +294,22 @@ props = sqlContext.sql("""select t1.OFF_BINS, t1.SHOT_BUCKET, t1.cnt / t2.tot_cn
 	join (
 		select OFF_BINS, count(*) as tot_cnt from nba group by OFF_BINS) t2
 	on t1.OFF_BINS = t2.OFF_BINS""")
+
+ex_points = joined.rdd
+
+# Now get average person data
+def get_shot_points(line):
+    shot = line['SHOT_BUCKET']
+    pts = line['PTS_SHOT']    
+    return (shot, (pts, 1))
+
+ex_points = ex_points.map(get_shot_points)\
+                         .reduceByKey(lambda x,y: (x[0]+y[0], x[1]+y[1]))\
+                                     .mapValues(lambda x: float(x[0])/x[1])
+# Expected Points
+# Paint 1.13
+# Mid range 0.802
+# Three 1.06
 
 props.collect()
 props.rdd.map(lambda i: ','.join(str(j) for j in i))

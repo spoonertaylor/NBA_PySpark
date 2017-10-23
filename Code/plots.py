@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+
+
+@author: spoonertaylor# -*- coding: utf-8 -*-
 """
 Created on Sun Oct  1 09:36:36 2017
-
-@author: spoonertaylor
 """
 
 from ggplot import *
@@ -36,7 +36,7 @@ exp['Experience'] = list(range(0,15))
 exp_plt = ggplot(aes(x = 'Experience', y = 'POINTS'), data=exp) + geom_point() + geom_line() + \
                 scale_x_continuous(breaks = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], \
                                    labels = ["0","1","2","3","4","5","6","7","8","9","10","11",\
-                                             "12","13","14+"])
+                                             "12","13","14+"]) + ylab("Points per 48 min")
 
 
 #############
@@ -51,11 +51,17 @@ types['Index'] = index
 types_long = pd.melt(types, id_vars = ['Cluster', 'Index'], value_vars = ['Height', 'Weight', 'Age'])
 
 types_plt = ggplot(aes(x='Cluster', weight = 'value'), types_long) + geom_bar() + \
-                  facet_wrap("variable", scales = "free")
+                  facet_wrap("variable", scales = "free", nrow=3)
                   
 ############
 # Task 4: Offensive Rating and Proportions
 ###########
 off = pd.read_csv(path+'output_team_props.csv')
+off['OFF_RAT'] = pd.Categorical(off['OFF_RAT'], ["[93, 96)", "[96, 99)", "[99, 102)","[102, 105)", "[105, 111)"])
+off = off.sort_values('OFF_RAT')
+off['index'] = [0,0,0,1,1,1,2,2,2,3,3,3,4,4,4]
 
-teams = ggplot(aes(x='OFF_RAT', y='Prop'),data=off)
+teams = ggplot(aes(x='index', y='Prop', group='SHOT_TYPE', color='SHOT_TYPE'),data=off) + geom_point() + geom_line() + \
+                scale_x_continuous(breaks = [0,1,2,3,4], \
+                                   labels = ["[93, 96)", "[96, 99)", "[99, 102)","[102, 105)", "[105, 111)"]) + \
+        xlab("Offensive Rating") + ylab("Proportion of Shots")
