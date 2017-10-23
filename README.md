@@ -38,7 +38,7 @@ The point of basketball is to score more points than the other team. To score po
 
 Randomly splitting our data into a training (80% of our data) and a test set (20%), we predict how well our logisitic regression model classifies if a shot is made or missed. Unfortunately, the classification accuracy is a low 0.61. This shows that it is very difficult to predict if a shot is going to go on in or not as there are many other factors that go into the shot. Additionally, while shots closer to the basket are generally thought of as easier shots, your defender is also much closer to you which causes a different relationship than when you are at the 3 point line and your defender is the same distance away. Looking at the plot below we start to see the complexity of  predicting the shot's outcome as many made and missed shots are all clustered in the same area. Excuse the blurriness, the transparancy was increased to try and see more of the points.
 
-![Shot Outcome by Shot Distance and Defender Distance](Data/Output/Plots/shot_outcome.png){width=60%}
+![Shot Outcome by Shot Distance and Defender Distance](Data/Output/Plots/shot_outcome.png)
 
 Despite our complexities, our model does back up intuitive thinking. In the table below we see the coefficients from the logistic regression that we fit. As one would expect, as you get farther away from the basket (increase your shot distance), the odds that your shot goes in goes down. Additionally, as the defender gets farther away (increasing the defender distance), the odds your shot goes in increases. Nothing ground breaking yet. It is interesting to see that the coefficient for defender distance is larger in absolute value, showing that your odds of making a shot increases more by moving your defender one foot farther away than you as a shooter moving in one foot, keeping all other factors constant. The Shot Type factor is an indicator of whether the shot was a catch and shoot or off the dribble. It is agreed that shooting off the dribble is much hard (just try it yourself at a local park or gym) and thus it makes sense that the odds of a shot going in decreases as you go from a catch and shoot to off the dribble. 
 
@@ -72,7 +72,7 @@ Does it take a rookie a couple years to adapt to the next level? Do older player
 |13          |6   | 21.07             |
 |14+         |9   | 18.96             |
 
-![Points per 48 Minutes by Experience](Data/Output/Plots/experience.png){width=75%}
+![Points per 48 Minutes by Experience](Data/Output/Plots/experience.png)
 
 Through this basic analysis our hypothesized thoughts seem to be correct. Scoring seems to increase through the first 3 years in the leagure where it reaches its height around a player's 4th year in the league (3 years of experience). After about 8 years of experience we a decline in scoring for the rest of the years with the 9 years of experience showing the third lowest points per 48 minutes. There is a spike at 13 years experience but due to the small sample size we are weary about the results.
 
@@ -136,7 +136,7 @@ Mid range shots are not efficient. In the 2014-2015 NBA season, mid-range shots 
 
 What stands out in our results? That the worst offensive rating teams actually shoot the highest proportion of three pointers. Further investigation found that the only team in the smallest bucket is the Philadelphia 76ers. The 76ers, while not the most talented on the court during the 2014-2015 season, were one of the leaders in sports analytics thanks to their GM Sam Hinkie. So while these results show the opposite of our original hypothesis- better teams shoot more threes- we can see the impact of analytics in the game. Disregarding the first bucket, we see see that the average proportion of three pointers taken increases with offensive rating and the average proportion of mid range shots decreases. This shows us that there seems to be some correlation between trading in the inefficient mid range shots for three pointers and the team's overall offensive rating.
 
-![Shot Type Proportion by Offensive Rating](Data/Output/Plots/offensive_rating.png){weight=70%}
+![Shot Type Proportion by Offensive Rating](Data/Output/Plots/offensive_rating.png)
 
 #Conclusion
 Our goal was to explore the 2014-2015 NBA season using PySpark. While we did not have a single hypothesis or question that we were trying to answer, we accomplished this goal. In each of the four tasks we were able to support what we believed to be true with empirical evidence of found suprising insights that allowed us to better understand new aspects of the NBA. Looking ahead to the current NBA season (2017-2018), we see can see how the traditional positions are continuing to disappear (Ben Simmons, 6' 10", is playing point guard, Warriors, Cavs, Celtic all starting \"small\" lineups with no traditional centers, etc.). Additionally, last season the Houston Rockets (Offensive Rating of 114.7) rewrote the record books in multiple 3 point categories, including an NBA record in most 3 point field goals attempted in a single half, game and season. Thus, the analysis that we found in this project has continued to develop in the NBA. Finally, further analysis like this one can continue to change the NBA by finding new ways to improve player positioning and offensive and defensives strategies.
