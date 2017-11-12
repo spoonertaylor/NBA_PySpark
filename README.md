@@ -8,7 +8,7 @@ In this analysis I looked at the 2014-2015 NBA Season and used data from it to i
 
 For this analysis we used three different datasets which are described below. The three datasets will be joined together and analysis will be completed using different aspects of each.
 
-##Shot Log
+## Shot Log
 **Source:** https://www.kaggle.com/dansbecker/nba-shot-logs/data  
 
 The first dataset that we will be using is the NBA shot log. The dataset contians 128,069 shots from 281 different players in the 2014-2015 NBA season. I understand that this is by no means a "large" dataset and the analysis on this dataset could be done in regular Python or R but once again, the goal is to learn the format and skills of PySpark. Each record is one shot in a game. We have information on which player took the shot, the shot outcome, when the shot was taken, how far away from the basket the shot was and how close the closest defender is. There is additional information on how many dribbles the player took before the shot and for how long the player was holding the ball before. This dataset gives us an almost complete picture of what was happening when the shot was taken.
@@ -18,19 +18,19 @@ The first dataset that we will be using is the NBA shot log. The dataset contian
 
 The next dataset that we will use is player information on 481 NBA players that played in the 2014-2015 NBA Season. For each player we have their season stat totals for the major box score statistics, including minutes, points, rebounds, field goal attempts and more. Additionally, we have personal information on the players like the players height, weight, age, college and more. Unfortunately, 68 out of the 481 players do not have this personal information. We are unsure where this missingness is coming from and so we will be cautious when using this information. The player names are unique, i.e. there are no two NBA players with the same name, which will allow us to join this data onto the shot log data through the player name. 
 
-##Team Information
+## Team Information
 **Source:** https://stats.nba.com/teams/advanced/?sort=W&dir=-1&Season=2014-15&SeasonType=Regular%20Season
 
 The final dataset hass information on each of the 30 NBA teams. The data was obtained from the NBA website. The basic information on NBA teams includes wins and losses, offensive and defensive ratings and other basic stats that will be used to understand the how the NBA team performed during the season. The purpose of using the team information with the player stats will be to compare how NBA teams perform, as a function of how different player's stats changed. 
 
-#Data Manipulation Methods
+# Data Manipulation Methods
 In this section we will discuss any data manipulations and processing that was needed before we could start the analysis. Luckily, the data was in a fairly clean format and not much additional work was needed before we could start the analysis.
 
 Two additional statistics were added on to the shot log data. The first is to classify the shot into which "zone" (a shot in the paint, a shot from 3 or a shot from the mid-range). Additionally, to simplify the data, we took the statistic on how many dribbles were taken before a shot and made it and indicator variable to represent whether or not the shot was off the catch or off the dribble.
 
 The final pre-processing that was done was to bucket the team offensive rating into 5 different buckets. This will allow us to analyze similar teams (based on this rating bucket) and infer what features of these teams are making them better or worse.
 
-#Analysis
+# Analysis
 In this section we will go over the actual analysis done for this project. There were four different tasks that were done. 
 
 ## Predicting a Shot's Outcome
@@ -50,7 +50,6 @@ Despite our complexities, our model does back up intuitive thinking. In the tabl
 | Shot Type         | -0.1369     |
 | FG%               | 0.0034      |
 
-\newpage
 ## Does scoring get better with experience?
 Does it take a rookie a couple years to adapt to the next level? Do older players start to adapt their game by passing more? In our next analysis we looked at the relationship between player's scoring per 48 minutes and how many years they have been in the league. We took all players who played more than 250 minutes in the 2014-2015 season and grouped them by their experience level. Experience level was used over age because people can enter the league at different ages. In the table and graph below we see the results:
 
@@ -130,14 +129,14 @@ What we can see is that there is not much noticable discrepancies between groups
 
 ![Physical Attributes by Cluster](Data/Output/Plots/physical_attr.png)
 
-\newpage
-##Team Offensive Rating by Proportion of Shot Types
+
+# Team Offensive Rating by Proportion of Shot Types
 Mid range shots are not efficient. In the 2014-2015 NBA season, mid-range shots had an expected point total of 0.802 while shots in the paint had an expected point total of 1.13 and three pointers had an expected point total of 1.06. If we know this, if NBA teams know this, then would it make sense to say that the better offensive teams shoot less mid range shots? That is the motivation behind this analysis. We used the offensive rating buckets and shot buckets (paint, mid range and three point) that we created in the data pre-processing as our keys for spark. Using these keys, we found the proportion of shots taken in each bucket. The results are shown below.
 
 What stands out in our results? That the worst offensive rating teams actually shoot the highest proportion of three pointers. Further investigation found that the only team in the smallest bucket is the Philadelphia 76ers. The 76ers, while not the most talented on the court during the 2014-2015 season, were one of the leaders in sports analytics thanks to their GM Sam Hinkie. So while these results show the opposite of our original hypothesis- better teams shoot more threes- we can see the impact of analytics in the game. Disregarding the first bucket, we see see that the average proportion of three pointers taken increases with offensive rating and the average proportion of mid range shots decreases. This shows us that there seems to be some correlation between trading in the inefficient mid range shots for three pointers and the team's overall offensive rating.
 
 ![Shot Type Proportion by Offensive Rating](Data/Output/Plots/offensive_rating.png)
 
-#Conclusion
+# Conclusion
 Our goal was to explore the 2014-2015 NBA season using PySpark. While we did not have a single hypothesis or question that we were trying to answer, we accomplished this goal. In each of the four tasks we were able to support what we believed to be true with empirical evidence of found suprising insights that allowed us to better understand new aspects of the NBA. Looking ahead to the current NBA season (2017-2018), we see can see how the traditional positions are continuing to disappear (Ben Simmons, 6' 10", is playing point guard, Warriors, Cavs, Celtic all starting \"small\" lineups with no traditional centers, etc.). Additionally, last season the Houston Rockets (Offensive Rating of 114.7) rewrote the record books in multiple 3 point categories, including an NBA record in most 3 point field goals attempted in a single half, game and season. Thus, the analysis that we found in this project has continued to develop in the NBA. Finally, further analysis like this one can continue to change the NBA by finding new ways to improve player positioning and offensive and defensives strategies.
 
